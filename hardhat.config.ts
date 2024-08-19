@@ -1,54 +1,69 @@
 // Plugins
-// Tasks
-import "./tasks";
-import "@nomicfoundation/hardhat-toolbox";
-import {config as dotenvConfig} from "dotenv";
+import "./tasks/add";
+import "./tasks/sub";
+import "./tasks/mul";
+import "./tasks/getSealedResult";
+import "./tasks/getResult";
+
+
+import "@nomiclabs/hardhat-ethers"; 
+import { config as dotenvConfig } from "dotenv";
 import "fhenix-hardhat-docker";
 import "fhenix-hardhat-plugin";
 import "hardhat-deploy";
-import {HardhatUserConfig} from "hardhat/config";
-import {resolve} from "path";
+import { HardhatUserConfig } from "hardhat/config";
+import { resolve } from "path";
 
-// DOTENV_CONFIG_PATH is used to specify the path to the .env file for example in the CI
+// Set up environment variables
 const dotenvConfigPath: string = process.env.DOTENV_CONFIG_PATH || "./.env";
 dotenvConfig({ path: resolve(__dirname, dotenvConfigPath) });
 
 const TESTNET_CHAIN_ID = 8008135;
 const TESTNET_RPC_URL = "https://api.helium.fhenix.zone";
 
-const testnetConfig = {
-    chainId: TESTNET_CHAIN_ID,
-    url: TESTNET_RPC_URL,
-}
+// Configure testnet network settings
+const testnetConfig: any = {
+  chainId: TESTNET_CHAIN_ID,
+  url: TESTNET_RPC_URL,
+};
 
-
-// Select either private keys or mnemonic from .env file or environment variables
+// Handle both private keys and mnemonics
 const keys = process.env.KEY;
 if (!keys) {
-  let mnemonic = process.env.MNEMONIC;
+  const mnemonic = process.env.MNEMONIC;
   if (!mnemonic) {
-    throw new Error("No mnemonic or private key provided, please set MNEMONIC or KEY in your .env file");
+    throw new Error("No mnemonic or private key provided. Please set MNEMONIC or KEY in your .env file.");
   }
-  testnetConfig['accounts'] = {
+  // Configure mnemonic-based accounts
+  testnetConfig.accounts = {
     count: 10,
     mnemonic,
-    path: "m/44'/60'/0'/0",
-  }
+    path: "m/44'/60'/0'/0",  // BIP44 Ethereum path
+  };
 } else {
-  testnetConfig['accounts'] = [keys];
+  // Configure key-based accounts
+  testnetConfig.accounts = [keys];
 }
 
-
+// Hardhat configuration
 const config: HardhatUserConfig = {
   solidity: "0.8.25",
-  // Optional: defaultNetwork is already being set to "localfhenix" by fhenix-hardhat-plugin
-  defaultNetwork: "localfhenix",
+  defaultNetwork: "localfhenix",  // Default to the local Fhenix testnet
   networks: {
+    localfhenix: {
+      url: "http://127.0.0.1:42069",  // LocalFhenix RPC URL
+      accounts: { mnemonic: process.env.MNEMONIC },  // Accounts for local network from mnemonic
+    },
     testnet: testnetConfig,
   },
-  typechain: {
-    outDir: "types",
-    target: "ethers-v6",
+  paths: {
+    sources: "./contracts",  // Source directory for contracts
+    tests: "./test",  // Directory for tests
+    cache: "./cache",  // Directory for cache files
+    artifacts: "./artifacts",  // Directory for artifacts
+  },
+  mocha: {
+    timeout: 20000,  // Timeout for Mocha tests (20 seconds)
   },
 };
 

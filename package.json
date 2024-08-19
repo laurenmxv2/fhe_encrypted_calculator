@@ -7,7 +7,10 @@
     "clean": "rimraf ./artifacts ./cache ./coverage ./types ./coverage.json ./deployments/localfhenix",
     "compile": "hardhat compile",
     "task:deploy": "hardhat deploy",
-    "task:addCount": "hardhat task:addCount",
+    "task:add": "hardhat task:add",
+    "task:getResult": "hardhat task:getResult",
+    "task:getSealedResult": "hardhat task:getSealedResult",
+    "task:sub": "hardhat task:sub",
     "task:getCount": "hardhat task:getCount",
     "task:getFunds": "hardhat task:getFunds",
     "localfhenix:start": "hardhat localfhenix:start",
@@ -25,9 +28,8 @@
   },
   "homepage": "https://github.com/fhenixprotocol/fhenix-hardhat-example#readme",
   "devDependencies": {
-    "@fhenixprotocol/contracts": "0.2.1",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.6",
-    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@nomicfoundation/hardhat-ethers": "^3.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.4",
@@ -54,5 +56,9 @@
     "ts-node": "^10.9.2",
     "typechain": "^8.3.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@fhenixprotocol/contracts": "^0.2.1",
+    "fhenixjs": "0.4.0-alpha.0"
   }
 }

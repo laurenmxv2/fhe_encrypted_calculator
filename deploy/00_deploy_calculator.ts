@@ -19,16 +19,16 @@ const func: DeployFunction = async function () {
     }
   }
 
-  const counter = await deploy("Counter", {
+  // Deploy the Calculator contract
+  const calculator = await deploy("Calculator", {
     from: signer.address,
-    args: [],
     log: true,
     skipIfAlreadyDeployed: false,
   });
 
-  console.log(`Counter contract: `, counter.address);
+  console.log(`Calculator contract deployed at:`, calculator.address);
 };
 
 export default func;
-func.id = "deploy_counter";
-func.tags = ["Counter"];
+func.id = "deploy_calculator";
+func.tags = ["Calculator"];
